@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Generador de WeekendDays</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 50px;
+        }
+        .container {
+            max-width: 800px;
+        }
+        .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+        }
+        .form-label {
+            font-weight: 500;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+	<div class="mb-3">
+            <a href="{% url 'index' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left-circle me-1"></i> Volver al inicio
+            </a>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">Generador de WeekendDays</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{% url 'weekend_days' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="cadena" class="form-label">Selecciona la cadena:</label>
+                        <select class="form-select" name="cadena" id="cadena">
+                            <option value="BK">BurguerQueen</option>
+                            <option value="MC">McAndrews</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="mercados" class="form-label">Introduce los países ISO (separados por comas):</label>
+                        <input type="text" class="form-control" name="mercados" id="mercados" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tipo" class="form-label">Tipo de Weekend Days:</label>
+                        <select class="form-select" name="tipo" id="tipo">
+                            <option value="Viernes, Sábado">Viernes, Sábado</option>
+                            <option value="Domingo">Domingo</option>
+                            <option value="Sin definir">Sin definir</option>
+                            <option value="Fin de semana">Fin de semana</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Generar JSON</button>
+                    </div>
+                </form>
+
+                {% if error %}
+                    <p class="text-danger mt-3 text-center">{{ error }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

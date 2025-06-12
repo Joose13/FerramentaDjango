@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herramienta de Migracion y Soporte WEB</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #f8f9fa, #e9ecef);
+        }
+        .card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        .btn-custom {
+            margin: 0.5rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .btn-custom:hover {
+            background-color: #0d6efd;
+            transform: scale(1.05);
+        }
+        .btn-description {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        .pedido-counter {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #198754;
+            margin-top: 20px;
+        }
+        .error-message {
+            font-size: 1.2rem;
+            color: red;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container text-center mt-5">
+        <h1 class="display-4 fw-bold text-primary mb-5">Utilidades de Migración y Soporte</h1>
+        <h1 class="mb-4">Selecciona un módulo a ejecutar</h1>
+        <div class="card shadow-lg p-4 bg-white rounded mb-4">
+            <form method="POST" action="{% url 'seleccionar_modulo' %}">
+                {% csrf_token %}
+                <div class="row mb-3">
+                    <div class="col">
+                        <button type="submit" name="modulo" value="copia_gds" class="btn btn-primary btn-lg btn-custom">
+                            <i class="bi bi-cloud-arrow-down me-2"></i> Ejecutar Copia GDS
+                        </button>
+                        <div class="btn-description">Realiza una copia de seguridad desde GDS</div>
+                    </div>
+                    <div class="col">
+                        <button type="submit" name="modulo" value="copia_tiendas" class="btn btn-primary btn-lg btn-custom">
+                            <i class="bi bi-shop me-2"></i> Ejecutar Copia Tiendas
+                        </button>
+                        <div class="btn-description">Copia datos de las tiendas físicas</div>
+                    </div>
+                </div>
+		<div class="row mb-3">
+                    <div class="col">
+                        <button type="submit" name="modulo" value="maxprep" class="btn btn-primary btn-lg btn-custom">
+                            <i class="bi bi-cloud-arrow-down me-2"></i> Cambiar Fechas de Entrega
+                        </button>
+                        <div class="btn-description">Configura nuevas fechas de entrega</div>
+                    </div>
+                    <div class="col">
+                        <button type="submit" name="modulo" value="weekendays" class="btn btn-primary btn-lg btn-custom">
+                            <i class="bi bi-shop me-2"></i> Ejecutar cambio Weekend Days
+                        </button>
+                        <div class="btn-description">Realiza cambios en los filtros</div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="card shadow p-4 bg-white rounded mb-4">
+            <form method="POST" action="{% url 'contar_pedidos_total' %}">
+                {% csrf_token %}
+                <div class="row mb-3">
+                    <div class="col-md-6 offset-md-3">
+                        <input type="text" name="store_ids" class="form-control" placeholder="Introduce IDs de tienda, separados por comas" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6 offset-md-3">
+                        <select name="conexion" class="form-select" required>
+                            <option value="BK">BurgerQueen</option>
+                            <option value="MC">McAndrews</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success btn-lg">Contar Pedidos</button>
+            </form>
+        </div>
+
+        {% if total_legacy is not None %}
+            <div class="card shadow p-4 bg-white rounded">
+                <h2 class="text-success">Total de Pedidos en Legacy</h2>
+                <div class="pedido-counter">{{ total_legacy }}</div>
+            </div>
+        {% elif error_legacy %}
+            <div class="card shadow p-4 bg-white rounded">
+                <div class="error-message">{{ error_legacy }}</div>
+            </div>
+        {% endif %}
+
+        {% if total_iop is not None %}
+            <div class="card shadow p-4 bg-white rounded">
+                <h2 class="text-success">Total de Pedidos en MONGO</h2>
+                <div class="pedido-counter">{{ total_iop }}</div>
+            </div>
+        {% elif error_iop %}
+            <div class="card shadow p-4 bg-white rounded">
+                <div class="error-message">{{ error_iop }}</div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
